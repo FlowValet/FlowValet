@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FlowValet — Check In</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --black: #0a0a0a;
+  --white: #f5f5f0;
+  --gold: #c9a84c;
+  --gold-light: #e8c97a;
+  --surface: #141414;
+  --surface2: #1e1e1e;
+  --border: rgba(201,168,76,0.2);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(201,168,76,0.12) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+.page { position:relative; z-index:1; flex:1; display:flex; flex-direction:column; }
+
+header {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:20px 28px; border-bottom:1px solid var(--border);
+}
+.logo { font-family:'Syne',sans-serif; font-weight:800; font-size:22px; color:var(--white); }
+.logo span { color:var(--gold); }
+.nav-btn {
+  padding:8px 18px; border-radius:8px; font-size:13px; font-weight:600;
+  cursor:pointer; text-decoration:none; transition:all 0.2s;
+  font-family:'DM Sans',sans-serif; background:var(--gold); color:var(--black); border:none;
+}
+.nav-btn:hover { background:var(--gold-light); }
+
+main { flex:1; display:flex; align-items:center; justify-content:center; padding:32px 20px; }
+
+.wrap { width:100%; max-width:460px; }
+.title { font-family:'Syne',sans-serif; font-size:30px; font-weight:800; margin-bottom:6px; }
+.title span { color:var(--gold); }
+.sub { color:rgba(245,245,240,0.45); font-size:14px; margin-bottom:28px; }
+
+.card {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:16px; padding:28px; margin-bottom:16px;
+}
+.field { margin-bottom:20px; }
+.field label {
+  display:block; font-size:11px; font-weight:600; letter-spacing:1.2px;
+  text-transform:uppercase; color:var(--gold); margin-bottom:8px;
+}
+.field input {
+  width:100%; background:var(--surface2); border:1px solid rgba(255,255,255,0.08);
+  border-radius:10px; padding:14px 16px; font-size:18px; font-weight:600;
+  font-family:'Syne',sans-serif; color:var(--white); letter-spacing:2px;
+  text-transform:uppercase; outline:none; transition:border-color 0.2s;
+}
+.field input::placeholder { color:rgba(255,255,255,0.18); font-weight:400; letter-spacing:1px; }
+.field input:focus { border-color:var(--gold); }
+.spot-input { font-size:28px !important; text-align:center; letter-spacing:4px !important; }
+
+.btn {
+  width:100%; padding:16px; background:var(--gold); color:var(--black);
+  border:none; border-radius:10px; font-family:'Syne',sans-serif;
+  font-size:16px; font-weight:700; cursor:pointer; transition:all 0.2s;
+}
+.btn:hover { background:var(--gold-light); transform:translateY(-1px); }
+.btn:active { transform:translateY(0); }
+
+/* QR Result */
+.qr-box { display:none; text-align:center; }
+.qr-box.show { display:block; animation:fadeUp 0.4s ease; }
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(16px); }
+  to { opacity:1; transform:translateY(0); }
+}
+.qr-plate {
+  font-family:'Syne',sans-serif; font-size:28px; font-weight:800;
+  letter-spacing:4px; color:var(--gold); margin-bottom:4px;
+}
+.qr-meta { font-size:13px; color:rgba(255,255,255,0.45); margin-bottom:22px; }
+.qr-meta strong { color:var(--white); }
+
+.qr-img-wrap {
+  background:white; border-radius:14px; padding:14px;
+  display:inline-block; margin-bottom:22px;
+}
+.qr-img-wrap img { display:block; width:200px; height:200px; }
+
+.qr-actions { display:flex; gap:10px; }
+.qr-action-btn {
+  flex:1; padding:13px; border-radius:10px; font-family:'DM Sans',sans-serif;
+  font-size:14px; font-weight:600; cursor:pointer; transition:all 0.2s; border:none;
+}
+.btn-print { background:var(--surface2); color:var(--white); border:1px solid var(--border); }
+.btn-print:hover { border-color:var(--gold); }
+.btn-new { background:var(--gold); color:var(--black); }
+.btn-new:hover { background:var(--gold-light); }
+
+/* Toast */
+.toast {
+  position:fixed; bottom:30px; left:50%; transform:translateX(-50%) translateY(80px);
+  background:var(--surface2); border:1px solid var(--border); color:var(--white);
+  padding:12px 24px; border-radius:100px; font-size:14px; font-weight:500;
+  transition:transform 0.3s ease; z-index:999; white-space:nowrap;
+}
+.toast.show { transform:translateX(-50%) translateY(0); }
+
+/* Print */
+@media print {
+  body { background:white; color:black; }
+  body::before { display:none; }
+  header, .form-card, .qr-actions { display:none !important; }
+  .qr-box { display:block !important; border:none; background:white; }
+  .qr-plate { color:#000; }
+  .qr-meta { color:#555; }
+  .print-only { display:block !important; }
+}
+.print-only {
+  display:none; font-size:13px; color:#444; margin-top:10px; line-height:1.7;
+}
+</style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <div class="logo">Flow<span>Valet</span></div>
+    <a href="dashboard.html" class="nav-btn">📊 Dashboard</a>
+  </header>
+  <main>
+    <div class="wrap">
+      <div class="title">Vehicle <span>Check-In</span></div>
+      <div class="sub">Enter plate and spot to generate the customer QR ticket.</div>
+
+      <div class="card" id="formCard">
+        <div class="field">
+          <label>License Plate</label>
+          <input id="plateInput" type="text" placeholder="ABC 1234" maxlength="12" autocomplete="off" oninput="this.value=this.value.toUpperCase()">
+        </div>
+        <div class="field">
+          <label>Parking Spot</label>
+          <input id="spotInput" type="text" class="spot-input" placeholder="A4" maxlength="6" autocomplete="off" oninput="this.value=this.value.toUpperCase()">
+        </div>
+        <button class="btn" onclick="createTicket()">⚡ Generate QR Ticket</button>
+      </div>
+
+      <div class="card qr-box" id="qrResult">
+        <div class="qr-plate" id="rPlate"></div>
+        <div class="qr-meta">Spot <strong id="rSpot"></strong> &nbsp;·&nbsp; <span id="rTime"></span></div>
+        <div class="qr-img-wrap">
+          <img id="qrImg" src="" alt="QR Code">
+        </div>
+        <div class="print-only" id="printInfo"></div>
+        <div class="qr-actions">
+          <button class="qr-action-btn btn-print" onclick="window.print()">🖨️ Print</button>
+          <button class="qr-action-btn btn-new" onclick="newTicket()">+ New Ticket</button>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<div class="toast" id="toast"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyC0IXfYNIbEjbLiPiY8C2C_JPAd5baTLMo",
+  authDomain: "flowvalet-efd95.firebaseapp.com",
+  databaseURL: "https://flowvalet-efd95-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "flowvalet-efd95",
+  storageBucket: "flowvalet-efd95.firebasestorage.app",
+  messagingSenderId: "394962828421",
+  appId: "1:394962828421:web:7bab162c88f3da9ee13dec"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+window.__db = db;
+window.__ref = ref;
+window.__set = set;
+window.__fbReady = true;
+</script>
+
+<script>
+function toast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 2500);
+}
+
+function genId() {
+  return Math.random().toString(36).substr(2,8).toUpperCase();
+}
+
+function createTicket() {
+  var plate = document.getElementById('plateInput').value.trim().toUpperCase();
+  var spot  = document.getElementById('spotInput').value.trim().toUpperCase();
+  if (!plate) { toast('Please enter a plate number'); return; }
+  if (!spot)  { toast('Please enter a parking spot'); return; }
+
+  var id = genId();
+  var now = new Date();
+  var timeStr = now.toLocaleTimeString('en-US', {hour:'2-digit', minute:'2-digit'});
+  var dateStr = now.toLocaleDateString('en-GB', {day:'numeric', month:'short', year:'numeric'});
+
+  var ticketData = {
+    plate: plate,
+    spot: spot,
+    checkinTime: now.toISOString(),
+    status: 'parked'
+  };
+
+  // Save to Firebase
+  if (window.__fbReady) {
+    window.__set(window.__ref(window.__db, 'tickets/' + id), ticketData)
+      .then(function(){ toast('✅ Ticket created'); })
+      .catch(function(){ toast('⚠️ Firebase error — check console'); });
+  }
+
+  // Build ticket URL
+  var base = window.location.href.replace(/index\.html.*/, '').replace(/\/$/, '');
+  var ticketUrl = base + '/ticket.html?id=' + id;
+
+  // Update UI
+  document.getElementById('rPlate').textContent = plate;
+  document.getElementById('rSpot').textContent = spot;
+  document.getElementById('rTime').textContent = timeStr + ' · ' + dateStr;
+
+  // QR via Google Charts
+  document.getElementById('qrImg').src =
+    'https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl=' + encodeURIComponent(ticketUrl) + '&choe=UTF-8';
+
+  // Print info
+  document.getElementById('printInfo').innerHTML =
+    '<strong>Plate:</strong> ' + plate + '<br>' +
+    '<strong>Spot:</strong> ' + spot + '<br>' +
+    '<strong>Time:</strong> ' + timeStr + ', ' + dateStr + '<br><br>' +
+    'Scan QR code to request your vehicle when ready.';
+
+  document.getElementById('formCard').style.display = 'none';
+  document.getElementById('qrResult').classList.add('show');
+}
+
+function newTicket() {
+  document.getElementById('plateInput').value = '';
+  document.getElementById('spotInput').value = '';
+  document.getElementById('qrResult').classList.remove('show');
+  document.getElementById('formCard').style.display = 'block';
+}
+
+document.addEventListener('keydown', function(e){ if(e.key==='Enter') createTicket(); });
+</script>
+</body>
+</html>
