@@ -7,164 +7,109 @@
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --black: #0d0d0d;
-  --white: #f5f5f0;
-  --gold: #c9a84c;
-  --gold-light: #e8c97a;
-  --surface: #161616;
-  --surface2: #202020;
-  --border: rgba(201,168,76,0.2);
-  --green: #4ade80;
-  --orange: #fb923c;
-  --red: #f87171;
+  --black:#0d0d0d; --white:#f5f5f0; --gold:#c9a84c; --gold-light:#e8c97a;
+  --surface:#161616; --surface2:#202020; --border:rgba(201,168,76,0.2);
+  --green:#4ade80; --orange:#fb923c; --red:#f87171;
 }
-* { margin:0; padding:0; box-sizing:border-box; }
-body {
-  background:var(--black); color:var(--white);
-  font-family:'DM Sans',sans-serif; min-height:100vh;
-  display:flex; flex-direction:column; align-items:center; justify-content:center;
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  background:var(--black);color:var(--white);
+  font-family:'DM Sans',sans-serif;min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
   padding:24px 20px;
 }
-body::before {
-  content:''; position:fixed; inset:0;
-  background:radial-gradient(ellipse 100% 60% at 50% 0%, rgba(201,168,76,0.1) 0%, transparent 65%);
-  pointer-events:none; z-index:0;
-}
-.page { position:relative; z-index:1; width:100%; max-width:400px; }
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 100% 60% at 50% 0%,rgba(201,168,76,0.1) 0%,transparent 65%);pointer-events:none;z-index:0;}
+.page{position:relative;z-index:1;width:100%;max-width:400px;}
 
-.logo {
-  font-family:'Syne',sans-serif; font-weight:800; font-size:18px;
-  color:rgba(255,255,255,0.4); text-align:center; margin-bottom:28px;
-  letter-spacing:0.5px;
-}
-.logo span { color:var(--gold); }
+.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:18px;color:rgba(255,255,255,0.38);text-align:center;margin-bottom:26px;}
+.logo span{color:var(--gold);}
 
 /* Ticket card */
-.ticket {
-  background:var(--surface); border:1px solid var(--border);
-  border-radius:20px; overflow:hidden; margin-bottom:20px;
-}
-.ticket-top {
-  padding:28px 28px 24px;
-  border-bottom:1px dashed rgba(201,168,76,0.2);
-  position:relative;
-}
-.ticket-top::before, .ticket-top::after {
-  content:''; position:absolute; bottom:-14px;
-  width:26px; height:26px; background:var(--black);
-  border-radius:50%; border:1px solid var(--border);
-}
-.ticket-top::before { left:-13px; }
-.ticket-top::after { right:-13px; }
+.ticket{background:var(--surface);border:1px solid var(--border);border-radius:20px;overflow:hidden;margin-bottom:18px;}
+.ticket-top{padding:26px 26px 22px;border-bottom:1px dashed rgba(201,168,76,0.2);position:relative;}
+.ticket-top::before,.ticket-top::after{content:'';position:absolute;bottom:-13px;width:24px;height:24px;background:var(--black);border-radius:50%;border:1px solid var(--border);}
+.ticket-top::before{left:-12px;} .ticket-top::after{right:-12px;}
 
-.status-pill {
-  display:inline-block; padding:4px 12px; border-radius:100px;
-  font-size:11px; font-weight:700; letter-spacing:1px;
-  text-transform:uppercase; margin-bottom:16px;
-  background:rgba(74,222,128,0.12); color:var(--green); border:1px solid rgba(74,222,128,0.2);
-}
-.status-pill.notifying {
-  background:rgba(251,146,60,0.12); color:var(--orange); border-color:rgba(251,146,60,0.2);
-}
-.status-pill.retrieving {
-  background:rgba(201,168,76,0.12); color:var(--gold); border-color:var(--border);
-}
+.status-pill{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:100px;font-size:11px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;margin-bottom:16px;}
+.pill-parked{background:rgba(74,222,128,0.12);color:var(--green);border:1px solid rgba(74,222,128,0.2);}
+.pill-notified{background:rgba(251,146,60,0.12);color:var(--orange);border:1px solid rgba(251,146,60,0.2);}
+.pill-retrieving{background:rgba(201,168,76,0.12);color:var(--gold);border:1px solid var(--border);}
+.pill-delivered{background:rgba(74,222,128,0.14);color:var(--green);border:1px solid rgba(74,222,128,0.25);}
 
-.plate-display {
-  font-family:'Syne',sans-serif; font-size:36px; font-weight:800;
-  letter-spacing:5px; color:var(--white); margin-bottom:6px;
-}
-.plate-sub { font-size:13px; color:rgba(255,255,255,0.4); }
+/* Pulse dot */
+.pill-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.pill-dot.pulse{animation:dotPulse 1.2s ease infinite;}
+@keyframes dotPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.8)}}
+.dot-green{background:var(--green);} .dot-orange{background:var(--orange);} .dot-gold{background:var(--gold);}
 
-.ticket-bottom { padding:24px 28px; }
-.info-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:20px; }
-.info-item {}
-.info-label {
-  font-size:10px; font-weight:700; letter-spacing:1.2px;
-  text-transform:uppercase; color:var(--gold); margin-bottom:4px;
-}
-.info-value { font-family:'Syne',sans-serif; font-size:22px; font-weight:700; color:var(--white); }
-.info-value.small { font-size:14px; font-weight:500; font-family:'DM Sans',sans-serif; }
+.plate-display{font-family:'Syne',sans-serif;font-size:34px;font-weight:800;letter-spacing:5px;color:var(--white);margin-bottom:5px;}
+.plate-sub{font-size:12px;color:rgba(255,255,255,0.38);}
 
-/* Loading state */
-.loading {
-  text-align:center; padding:60px 20px;
-}
-.spinner {
-  width:40px; height:40px; border:3px solid rgba(201,168,76,0.2);
-  border-top-color:var(--gold); border-radius:50%;
-  animation:spin 0.8s linear infinite; margin:0 auto 16px;
-}
-@keyframes spin { to { transform:rotate(360deg); } }
-.loading p { color:rgba(255,255,255,0.4); font-size:14px; }
+.ticket-bottom{padding:22px 26px;}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:20px;}
+.info-label{font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--gold);margin-bottom:3px;}
+.info-value{font-family:'Syne',sans-serif;font-size:20px;font-weight:700;color:var(--white);}
+.info-value.sm{font-size:13px;font-weight:500;font-family:'DM Sans',sans-serif;line-height:1.5;}
+
+/* Loading */
+.loading{text-align:center;padding:60px 20px;}
+.spinner{width:38px;height:38px;border:3px solid rgba(201,168,76,0.2);border-top-color:var(--gold);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 14px;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading p{color:rgba(255,255,255,0.38);font-size:14px;}
 
 /* Notify section */
-.notify-section { }
-.notify-title {
-  font-family:'Syne',sans-serif; font-size:16px; font-weight:700;
-  margin-bottom:14px; color:var(--white);
-}
-.time-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:14px; }
-.time-chip {
-  padding:12px 6px; background:var(--surface2); border:1px solid rgba(255,255,255,0.08);
-  border-radius:10px; font-family:'Syne',sans-serif; font-size:15px; font-weight:700;
-  color:var(--white); cursor:pointer; text-align:center; transition:all 0.2s;
-}
-.time-chip:hover { border-color:var(--gold); color:var(--gold); }
-.time-chip.selected { background:rgba(201,168,76,0.12); border-color:var(--gold); color:var(--gold); }
+.notify-title{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;margin-bottom:13px;color:var(--white);}
+.time-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:12px;}
+.time-chip{padding:11px 5px;background:var(--surface2);border:1px solid rgba(255,255,255,0.07);border-radius:10px;font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--white);cursor:pointer;text-align:center;transition:all 0.2s;}
+.time-chip:hover{border-color:var(--gold);color:var(--gold);}
+.time-chip.selected{background:rgba(201,168,76,0.12);border-color:var(--gold);color:var(--gold);}
+.custom-row{display:flex;gap:7px;margin-bottom:12px;align-items:center;}
+.custom-input{flex:1;background:var(--surface2);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:10px 13px;font-size:14px;font-family:'Syne',sans-serif;font-weight:600;color:var(--white);outline:none;transition:border-color 0.2s;}
+.custom-input:focus{border-color:var(--gold);}
+.custom-input::placeholder{color:rgba(255,255,255,0.18);font-weight:400;}
+.custom-label{font-size:12px;color:rgba(255,255,255,0.38);white-space:nowrap;}
+.notify-btn{width:100%;padding:15px;background:var(--gold);color:var(--black);border:none;border-radius:12px;font-family:'Syne',sans-serif;font-size:16px;font-weight:700;cursor:pointer;transition:all 0.2s;}
+.notify-btn:hover{background:var(--gold-light);transform:translateY(-1px);}
+.notify-btn:disabled{opacity:0.38;cursor:not-allowed;transform:none;}
 
-.custom-row { display:flex; gap:8px; margin-bottom:14px; align-items:center; }
-.custom-input {
-  flex:1; background:var(--surface2); border:1px solid rgba(255,255,255,0.08);
-  border-radius:10px; padding:10px 14px; font-size:15px; font-family:'Syne',sans-serif;
-  font-weight:600; color:var(--white); outline:none; transition:border-color 0.2s;
-}
-.custom-input:focus { border-color:var(--gold); }
-.custom-input::placeholder { color:rgba(255,255,255,0.2); font-weight:400; }
-.custom-label { font-size:13px; color:rgba(255,255,255,0.4); white-space:nowrap; }
+/* Status screens */
+.status-screen{text-align:center;padding:10px 0 6px;}
+.status-icon{font-size:52px;margin-bottom:12px;line-height:1;}
+.status-screen h2{font-family:'Syne',sans-serif;font-size:21px;font-weight:800;margin-bottom:8px;}
+.status-screen p{font-size:13px;color:rgba(255,255,255,0.42);line-height:1.65;}
 
-.notify-btn {
-  width:100%; padding:16px; background:var(--gold); color:var(--black);
-  border:none; border-radius:12px; font-family:'Syne',sans-serif;
-  font-size:16px; font-weight:700; cursor:pointer; transition:all 0.2s;
-}
-.notify-btn:hover { background:var(--gold-light); transform:translateY(-1px); }
-.notify-btn:active { transform:translateY(0); }
-.notify-btn:disabled { opacity:0.4; cursor:not-allowed; transform:none; }
+/* Countdown box */
+.countdown-box{margin-top:18px;padding:15px;background:rgba(201,168,76,0.07);border:1px solid var(--border);border-radius:12px;}
+.countdown-num{font-family:'Syne',sans-serif;font-size:40px;font-weight:800;color:var(--gold);line-height:1;}
+.countdown-label{font-size:11px;color:rgba(255,255,255,0.38);margin-top:4px;letter-spacing:0.5px;}
 
-/* Confirmed state */
-.confirmed {
-  text-align:center; padding:20px 0 10px;
-}
-.confirmed-icon { font-size:52px; margin-bottom:12px; }
-.confirmed h2 {
-  font-family:'Syne',sans-serif; font-size:22px; font-weight:800;
-  margin-bottom:8px; color:var(--white);
-}
-.confirmed p { font-size:14px; color:rgba(255,255,255,0.45); line-height:1.6; }
-.countdown-display {
-  margin-top:20px; padding:16px; background:rgba(201,168,76,0.08);
-  border:1px solid var(--border); border-radius:12px;
-}
-.countdown-num {
-  font-family:'Syne',sans-serif; font-size:42px; font-weight:800; color:var(--gold);
-  line-height:1;
-}
-.countdown-label { font-size:12px; color:rgba(255,255,255,0.4); margin-top:4px; letter-spacing:0.5px; }
+/* Retrieving screen */
+.retrieving-screen{text-align:center;padding:10px 0 6px;}
+.retrieving-icon{font-size:52px;margin-bottom:12px;animation:carBounce 1s ease infinite;}
+@keyframes carBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.retrieving-screen h2{font-family:'Syne',sans-serif;font-size:21px;font-weight:800;margin-bottom:8px;color:var(--gold);}
+.retrieving-screen p{font-size:13px;color:rgba(255,255,255,0.42);line-height:1.65;}
+.retrieving-steps{margin-top:16px;display:flex;flex-direction:column;gap:8px;}
+.rstep{display:flex;align-items:center;gap:10px;background:rgba(201,168,76,0.07);border:1px solid rgba(201,168,76,0.12);border-radius:10px;padding:10px 14px;font-size:13px;}
+.rstep-icon{font-size:18px;flex-shrink:0;}
+.rstep-text{color:rgba(255,255,255,0.55);}
+
+/* Delivered screen */
+.delivered-screen{text-align:center;padding:10px 0 6px;}
+.delivered-icon{font-size:58px;margin-bottom:12px;}
+.delivered-screen h2{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;margin-bottom:8px;color:var(--green);}
+.delivered-screen p{font-size:13px;color:rgba(255,255,255,0.42);line-height:1.65;}
+.delivered-badge{display:inline-block;margin-top:16px;padding:10px 22px;background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.2);border-radius:100px;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--green);}
 
 /* Error */
-.error-state { text-align:center; padding:60px 20px; }
-.error-state .icon { font-size:48px; margin-bottom:16px; }
-.error-state h2 { font-family:'Syne',sans-serif; font-size:20px; margin-bottom:8px; }
-.error-state p { font-size:14px; color:rgba(255,255,255,0.4); }
+.error-state{text-align:center;padding:60px 20px;}
+.error-state .icon{font-size:46px;margin-bottom:14px;}
+.error-state h2{font-family:'Syne',sans-serif;font-size:19px;margin-bottom:7px;}
+.error-state p{font-size:13px;color:rgba(255,255,255,0.38);}
 
-/* Footer copyright */
-.ticket-footer {
-  text-align:center; padding-top:8px;
-  font-size:11px; color:rgba(245,245,240,0.2);
-  letter-spacing:0.4px;
-}
-.ticket-footer span { color:rgba(201,168,76,0.35); }
+/* Footer */
+.ticket-footer{text-align:center;padding-top:6px;font-size:11px;color:rgba(245,245,240,0.18);}
+.ticket-footer span{color:rgba(201,168,76,0.32);}
 </style>
 </head>
 <body>
@@ -173,34 +118,35 @@ body::before {
 
   <!-- Loading -->
   <div id="loadingState">
-    <div class="loading">
-      <div class="spinner"></div>
-      <p>Loading your ticket...</p>
-    </div>
+    <div class="loading"><div class="spinner"></div><p>Loading your ticket…</p></div>
   </div>
 
   <!-- Ticket -->
   <div id="ticketState" style="display:none;">
     <div class="ticket">
       <div class="ticket-top">
-        <div class="status-pill" id="statusPill">● Parked</div>
+        <div class="status-pill pill-parked" id="statusPill">
+          <span class="pill-dot dot-green pulse"></span>
+          <span id="pillText">Parked</span>
+        </div>
         <div class="plate-display" id="tPlate">—</div>
         <div class="plate-sub">License Plate</div>
       </div>
+
       <div class="ticket-bottom">
         <div class="info-grid">
-          <div class="info-item">
+          <div>
             <div class="info-label">Spot</div>
             <div class="info-value" id="tSpot">—</div>
           </div>
-          <div class="info-item">
+          <div>
             <div class="info-label">Checked In</div>
-            <div class="info-value small" id="tTime">—</div>
+            <div class="info-value sm" id="tTime">—</div>
           </div>
         </div>
 
-        <!-- Notify section -->
-        <div class="notify-section" id="notifySection">
+        <!-- 1. NOTIFY — customer picks time -->
+        <div id="notifySection">
           <div class="notify-title">🚗 Ready to leave?</div>
           <div class="time-grid">
             <div class="time-chip" onclick="selectTime(5,this)">5m</div>
@@ -215,16 +161,37 @@ body::before {
           <button class="notify-btn" id="notifyBtn" onclick="notifyValet()" disabled>Notify Valet</button>
         </div>
 
-        <!-- Confirmed section -->
-        <div class="confirmed" id="confirmedSection" style="display:none;">
-          <div class="confirmed-icon">✅</div>
+        <!-- 2. CONFIRMED — waiting for valet -->
+        <div class="status-screen" id="confirmedSection" style="display:none;">
+          <div class="status-icon">✅</div>
           <h2>Valet Notified!</h2>
-          <p>Your car will be ready.<br>Please make your way to the exit.</p>
-          <div class="countdown-display" id="countdownDisplay" style="display:none;">
+          <p>Your car will be ready soon.<br>Please make your way to the exit.</p>
+          <div class="countdown-box" id="countdownDisplay" style="display:none;">
             <div class="countdown-num" id="countdownNum">—</div>
-            <div class="countdown-label">minutes remaining</div>
+            <div class="countdown-label">estimated arrival</div>
           </div>
         </div>
+
+        <!-- 3. RETRIEVING — valet is getting the car -->
+        <div class="retrieving-screen" id="retrievingSection" style="display:none;">
+          <div class="retrieving-icon">🚗</div>
+          <h2>On Our Way!</h2>
+          <p>Your valet is retrieving your vehicle right now.<br>Please head to the exit.</p>
+          <div class="retrieving-steps">
+            <div class="rstep"><span class="rstep-icon">🔑</span><span class="rstep-text">Valet has collected your keys</span></div>
+            <div class="rstep"><span class="rstep-icon">🅿️</span><span class="rstep-text">Heading to your parking spot</span></div>
+            <div class="rstep"><span class="rstep-icon">🚪</span><span class="rstep-text">Please proceed to the exit</span></div>
+          </div>
+        </div>
+
+        <!-- 4. DELIVERED — car is here -->
+        <div class="delivered-screen" id="deliveredSection" style="display:none;">
+          <div class="delivered-icon">🎉</div>
+          <h2>Your Car is Here!</h2>
+          <p>Your vehicle has been delivered.<br>Thank you for using FlowValet — have a great journey!</p>
+          <div class="delivered-badge">✅ Car Delivered</div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -238,9 +205,7 @@ body::before {
     </div>
   </div>
 
-  <div class="ticket-footer">
-    Flow<span>Valet</span> &nbsp;·&nbsp; © Mohammad Al-Jammal &nbsp;·&nbsp; All Rights Reserved
-  </div>
+  <div class="ticket-footer">Flow<span>Valet</span> &nbsp;·&nbsp; © Mohammad Al-Jammal &nbsp;·&nbsp; All Rights Reserved</div>
 </div>
 
 <script type="module">
@@ -248,129 +213,159 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/fireba
 import { getDatabase, ref, onValue, update } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyC0IXfYNIbEjbLiPiY8C2C_JPAd5baTLMo",
-  authDomain: "flowvalet-efd95.firebaseapp.com",
-  databaseURL: "https://flowvalet-efd95-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "flowvalet-efd95",
-  storageBucket: "flowvalet-efd95.firebasestorage.app",
-  messagingSenderId: "394962828421",
-  appId: "1:394962828421:web:7bab162c88f3da9ee13dec"
+  apiKey:"AIzaSyC0IXfYNIbEjbLiPiY8C2C_JPAd5baTLMo",
+  authDomain:"flowvalet-efd95.firebaseapp.com",
+  databaseURL:"https://flowvalet-efd95-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId:"flowvalet-efd95",
+  storageBucket:"flowvalet-efd95.firebasestorage.app",
+  messagingSenderId:"394962828421",
+  appId:"1:394962828421:web:7bab162c88f3da9ee13dec"
 };
 
 const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
+const db  = getDatabase(app);
 
-var params = new URLSearchParams(window.location.search);
+var params   = new URLSearchParams(window.location.search);
 var ticketId = params.get('id');
 
-if (!ticketId) {
-  document.getElementById('loadingState').style.display = 'none';
-  document.getElementById('errorState').style.display = 'block';
+if(!ticketId){
+  document.getElementById('loadingState').style.display='none';
+  document.getElementById('errorState').style.display='block';
 } else {
-  var ticketRef = ref(db, 'tickets/' + ticketId);
-  onValue(ticketRef, function(snap) {
-    document.getElementById('loadingState').style.display = 'none';
-    if (!snap.exists()) {
-      document.getElementById('errorState').style.display = 'block';
+  onValue(ref(db,'tickets/'+ticketId), function(snap){
+    document.getElementById('loadingState').style.display='none';
+
+    if(!snap.exists()){
+      // Check done archive
+      import("https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js").then(function(m){
+        m.get(m.ref(db,'done/'+ticketId)).then(function(ds){
+          if(ds.exists()){ showDelivered(); document.getElementById('ticketState').style.display='block'; }
+          else { document.getElementById('errorState').style.display='block'; }
+        });
+      });
       return;
     }
 
     var data = snap.val();
-    document.getElementById('ticketState').style.display = 'block';
+    document.getElementById('ticketState').style.display='block';
     document.getElementById('tPlate').textContent = data.plate;
-    document.getElementById('tSpot').textContent = data.spot;
-
+    document.getElementById('tSpot').textContent  = data.spot;
     var t = new Date(data.checkinTime);
-    document.getElementById('tTime').textContent =
-      t.toLocaleTimeString('en-US', {hour:'2-digit', minute:'2-digit'}) + '\n' +
-      t.toLocaleDateString('en-GB', {day:'numeric', month:'short'});
+    document.getElementById('tTime').textContent  =
+      t.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'})+'\n'+
+      t.toLocaleDateString('en-GB',{day:'numeric',month:'short'});
 
-    var pill = document.getElementById('statusPill');
-    if (data.status === 'notified' || data.status === 'retrieving') {
-      pill.textContent = '● On the way';
-      pill.className = 'status-pill retrieving';
-      document.getElementById('notifySection').style.display = 'none';
-      document.getElementById('confirmedSection').style.display = 'block';
+    var pill     = document.getElementById('statusPill');
+    var pillText = document.getElementById('pillText');
 
-      if (data.notifiedAt && data.notifyMinutes) {
-        var notifiedTime = new Date(data.notifiedAt);
-        var endTime = new Date(notifiedTime.getTime() + data.notifyMinutes * 60000);
+    // Hide all state sections first
+    hide('notifySection'); hide('confirmedSection'); hide('retrievingSection'); hide('deliveredSection');
+
+    if(data.status==='parked'){
+      // Default — show notify form
+      pill.className='status-pill pill-parked';
+      pillText.textContent='Parked';
+      setDot(pill,'dot-green');
+      show('notifySection');
+
+    } else if(data.status==='notified'){
+      pill.className='status-pill pill-notified';
+      pillText.textContent='Valet Notified';
+      setDot(pill,'dot-orange');
+      show('confirmedSection');
+      if(data.notifiedAt&&data.notifyMinutes){
+        var endTime=new Date(new Date(data.notifiedAt).getTime()+data.notifyMinutes*60000);
         startCountdown(endTime);
       }
-    } else {
-      pill.textContent = '● Parked';
-      pill.className = 'status-pill';
+
+    } else if(data.status==='retrieving'){
+      pill.className='status-pill pill-retrieving';
+      pillText.textContent='On the Way 🚗';
+      setDot(pill,'dot-gold');
+      show('retrievingSection');
+
+    } else if(data.status==='done'){
+      showDelivered();
     }
   });
 
-  window.__update = function(minutes) {
-    return update(ref(db, 'tickets/' + ticketId), {
-      status: 'notified',
-      notifyMinutes: minutes,
-      notifiedAt: new Date().toISOString()
+  // Also watch the done node in case the ticket gets archived while page is open
+  onValue(ref(db,'done/'+ticketId), function(snap){
+    if(snap.exists()){
+      showDelivered();
+      document.getElementById('ticketState').style.display='block';
+      document.getElementById('loadingState').style.display='none';
+      document.getElementById('errorState').style.display='none';
+    }
+  });
+
+  window.__update = function(minutes){
+    return update(ref(db,'tickets/'+ticketId),{
+      status:'notified', notifyMinutes:minutes, notifiedAt:new Date().toISOString()
     });
   };
 }
 
-function startCountdown(endTime) {
-  var display = document.getElementById('countdownDisplay');
-  var num = document.getElementById('countdownNum');
-  display.style.display = 'block';
+function showDelivered(){
+  var pill=document.getElementById('statusPill');
+  var pillText=document.getElementById('pillText');
+  if(pill){ pill.className='status-pill pill-delivered'; pillText.textContent='Delivered ✓'; setDot(pill,'dot-green'); }
+  hide('notifySection'); hide('confirmedSection'); hide('retrievingSection');
+  show('deliveredSection');
+}
 
-  function tick() {
-    var remaining = Math.max(0, endTime - new Date());
-    var mins = Math.floor(remaining / 60000);
-    var secs = Math.floor((remaining % 60000) / 1000);
-    num.textContent = mins + ':' + String(secs).padStart(2,'0');
-    if (remaining > 0) requestAnimationFrame(tick);
-    else num.textContent = 'Ready!';
+function show(id){ var el=document.getElementById(id); if(el) el.style.display='block'; }
+function hide(id){ var el=document.getElementById(id); if(el) el.style.display='none'; }
+function setDot(pill, cls){
+  var dot=pill.querySelector('.pill-dot');
+  if(dot){ dot.className='pill-dot pulse '+cls; }
+}
+
+function startCountdown(endTime){
+  var display=document.getElementById('countdownDisplay');
+  var num=document.getElementById('countdownNum');
+  display.style.display='block';
+  function tick(){
+    var rem=Math.max(0,endTime-new Date());
+    var m=Math.floor(rem/60000), s=Math.floor((rem%60000)/1000);
+    num.textContent=m+':'+String(s).padStart(2,'0');
+    if(rem>0) requestAnimationFrame(tick); else num.textContent='Ready!';
   }
   tick();
 }
-window.__startCountdown = startCountdown;
+window.__startCountdown=startCountdown;
 </script>
 
 <script>
-var selectedMinutes = null;
+var selectedMinutes=null;
 
-function selectTime(mins, el) {
-  selectedMinutes = mins;
+function selectTime(mins,el){
+  selectedMinutes=mins;
   document.querySelectorAll('.time-chip').forEach(function(c){ c.classList.remove('selected'); });
   el.classList.add('selected');
-  document.getElementById('customMin').value = '';
-  document.getElementById('notifyBtn').disabled = false;
+  document.getElementById('customMin').value='';
+  document.getElementById('notifyBtn').disabled=false;
 }
-
-function selectCustom(val) {
-  var m = parseInt(val);
-  if (m > 0 && m <= 60) {
-    selectedMinutes = m;
+function selectCustom(val){
+  var m=parseInt(val);
+  if(m>0&&m<=60){
+    selectedMinutes=m;
     document.querySelectorAll('.time-chip').forEach(function(c){ c.classList.remove('selected'); });
-    document.getElementById('notifyBtn').disabled = false;
+    document.getElementById('notifyBtn').disabled=false;
   } else {
-    selectedMinutes = null;
-    document.getElementById('notifyBtn').disabled = true;
+    selectedMinutes=null;
+    document.getElementById('notifyBtn').disabled=true;
   }
 }
-
-function notifyValet() {
-  if (!selectedMinutes) return;
-  var btn = document.getElementById('notifyBtn');
-  btn.disabled = true;
-  btn.textContent = 'Notifying...';
-
-  if (window.__update) {
-    window.__update(selectedMinutes).then(function() {
-      document.getElementById('notifySection').style.display = 'none';
-      document.getElementById('confirmedSection').style.display = 'block';
-      document.getElementById('statusPill').textContent = '● On the way';
-      document.getElementById('statusPill').className = 'status-pill retrieving';
-
-      var endTime = new Date(Date.now() + selectedMinutes * 60000);
-      if (window.__startCountdown) window.__startCountdown(endTime);
-    }).catch(function() {
-      btn.disabled = false;
-      btn.textContent = 'Notify Valet';
+function notifyValet(){
+  if(!selectedMinutes) return;
+  var btn=document.getElementById('notifyBtn');
+  btn.disabled=true; btn.textContent='Notifying…';
+  if(window.__update){
+    window.__update(selectedMinutes).then(function(){
+      // Firebase listener will update the UI automatically
+    }).catch(function(){
+      btn.disabled=false; btn.textContent='Notify Valet';
       alert('Connection error. Please try again.');
     });
   }
