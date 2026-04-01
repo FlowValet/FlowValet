@@ -55,6 +55,11 @@ body::before {
 }
 .login-btn:hover { background:var(--gold-light); }
 .login-err { font-size:13px; color:var(--red); margin-top:10px; display:none; }
+.login-copyright {
+  margin-top:20px; font-size:11px; color:rgba(255,255,255,0.18);
+  letter-spacing:0.4px;
+}
+.login-copyright span { color:rgba(201,168,76,0.4); }
 
 /* Main layout */
 .page { position:relative; z-index:1; display:flex; flex-direction:column; min-height:100vh; }
@@ -182,7 +187,7 @@ header {
 .empty-icon { font-size:48px; margin-bottom:12px; }
 .empty p { font-size:14px; }
 
-/* Alert sound indicator */
+/* Alert banner */
 .alert-banner {
   position:fixed; top:70px; left:50%; transform:translateX(-50%) translateY(-100px);
   background:#fb923c; color:#000; padding:12px 28px; border-radius:100px;
@@ -191,6 +196,15 @@ header {
   white-space:nowrap; box-shadow:0 8px 32px rgba(251,146,60,0.4);
 }
 .alert-banner.show { transform:translateX(-50%) translateY(0); }
+
+/* Footer copyright */
+footer {
+  text-align:center; padding:12px 20px;
+  border-top:1px solid rgba(201,168,76,0.1);
+  font-size:11px; color:rgba(245,245,240,0.2);
+  letter-spacing:0.5px;
+}
+footer span { color:rgba(201,168,76,0.4); }
 </style>
 </head>
 <body>
@@ -203,6 +217,7 @@ header {
     <input type="password" class="login-input" id="passInput" placeholder="••••" maxlength="20" onkeydown="if(event.key==='Enter')doLogin()">
     <button class="login-btn" onclick="doLogin()">Enter Dashboard</button>
     <div class="login-err" id="loginErr">Incorrect password</div>
+    <div class="login-copyright">© <span>Mohammad Al-Jammal</span> · All Rights Reserved</div>
   </div>
 </div>
 
@@ -260,6 +275,10 @@ header {
       </div>
     </div>
   </div>
+
+  <footer>
+    Flow<span>Valet</span> &nbsp;·&nbsp; © Mohammad Al-Jammal &nbsp;·&nbsp; All Rights Reserved
+  </footer>
 </div>
 
 <script type="module">
@@ -286,7 +305,6 @@ window.__markRetrieving = function(id) {
   update(ref(db, 'tickets/' + id), { status: 'retrieving' });
 };
 window.__markDone = function(id) {
-  // Archive and remove
   var t = allTickets[id];
   if (t) {
     var doneRef = ref(db, 'done/' + id);
@@ -329,18 +347,15 @@ function renderDashboard(tickets) {
   var notifiedList = ids.filter(function(id){ return tickets[id].status === 'notified' || tickets[id].status === 'retrieving'; });
   var parkedList = ids.filter(function(id){ return tickets[id].status === 'parked'; });
 
-  // Stats
   document.getElementById('statTotal').textContent = ids.length;
   document.getElementById('statNotified').textContent = notifiedList.length;
   document.getElementById('statParked').textContent = parkedList.length;
   document.getElementById('alertBadge').textContent = notifiedList.length;
   document.getElementById('allBadge').textContent = ids.length;
 
-  // Alert section
   var alertsSection = document.getElementById('alertsSection');
   alertsSection.style.display = notifiedList.length > 0 ? 'block' : 'none';
 
-  // New notifications
   notifiedList.forEach(function(id) {
     if (!knownNotified.has(id)) {
       knownNotified.add(id);
@@ -348,18 +363,15 @@ function renderDashboard(tickets) {
       playAlert();
     }
   });
-  // Clean up resolved
   Array.from(knownNotified).forEach(function(id) {
     if (!tickets[id] || (tickets[id].status !== 'notified' && tickets[id].status !== 'retrieving')) {
       knownNotified.delete(id);
     }
   });
 
-  // Render alert cards
   document.getElementById('alertCards').innerHTML = notifiedList.length === 0
     ? '' : notifiedList.map(function(id){ return buildCard(id, tickets[id], true); }).join('');
 
-  // Render all cards
   var allContainer = document.getElementById('allCards');
   if (ids.length === 0) {
     allContainer.innerHTML = '<div class="empty"><div class="empty-icon">🏁</div><p>No active vehicles.<br>Check in a vehicle to get started.</p></div>';
@@ -369,7 +381,6 @@ function renderDashboard(tickets) {
       .map(function(id){ return buildCard(id, tickets[id], false); }).join('');
   }
 
-  // Start countdowns
   document.querySelectorAll('[data-countdown]').forEach(function(el) {
     var endTime = new Date(el.getAttribute('data-countdown'));
     tickCountdown(el, endTime);
@@ -482,7 +493,6 @@ function doLogout() {
   document.getElementById('passInput').value = '';
 }
 
-// Auto-login if session active
 if (sessionStorage.getItem('valetAuth') === '1') {
   document.getElementById('loginOverlay').style.display = 'none';
   document.getElementById('mainPage').style.display = 'flex';

@@ -157,6 +157,14 @@ body::before {
 .error-state .icon { font-size:48px; margin-bottom:16px; }
 .error-state h2 { font-family:'Syne',sans-serif; font-size:20px; margin-bottom:8px; }
 .error-state p { font-size:14px; color:rgba(255,255,255,0.4); }
+
+/* Footer copyright */
+.ticket-footer {
+  text-align:center; padding-top:8px;
+  font-size:11px; color:rgba(245,245,240,0.2);
+  letter-spacing:0.4px;
+}
+.ticket-footer span { color:rgba(201,168,76,0.35); }
 </style>
 </head>
 <body>
@@ -229,6 +237,10 @@ body::before {
       <p>This QR code may be invalid or expired.<br>Please see the valet desk.</p>
     </div>
   </div>
+
+  <div class="ticket-footer">
+    Flow<span>Valet</span> &nbsp;·&nbsp; © Mohammad Al-Jammal &nbsp;·&nbsp; All Rights Reserved
+  </div>
 </div>
 
 <script type="module">
@@ -248,7 +260,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// Get ticket ID from URL
 var params = new URLSearchParams(window.location.search);
 var ticketId = params.get('id');
 
@@ -281,7 +292,6 @@ if (!ticketId) {
       document.getElementById('notifySection').style.display = 'none';
       document.getElementById('confirmedSection').style.display = 'block';
 
-      // Show countdown if notifiedAt exists
       if (data.notifiedAt && data.notifyMinutes) {
         var notifiedTime = new Date(data.notifiedAt);
         var endTime = new Date(notifiedTime.getTime() + data.notifyMinutes * 60000);
@@ -293,7 +303,6 @@ if (!ticketId) {
     }
   });
 
-  // Expose update for notify
   window.__update = function(minutes) {
     return update(ref(db, 'tickets/' + ticketId), {
       status: 'notified',
